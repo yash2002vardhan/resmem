@@ -16,13 +16,15 @@ transformer = transforms.Compose((
     )
 )
 
-cpu = torch.device('cpu')
+# cpu = torch.device('cpu')
+
+device =  torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 class ResMem(nn.Module):
-    def __init__(self, learning_rate=1e-5, momentum=.9, cruise_altitude=384, pretrained=False):
+    def __init__(self, learning_rate=1e-5, momentum=.9, cruise_altitude=384, pretrained=False, device = device):
         super().__init__()
         if pretrained:
-            weights = ResNet152_Weights.DEFAULT
+            weights = ResNet152_Weights.to_device(device)
         else:
             weights = None
 
@@ -61,7 +63,7 @@ class ResMem(nn.Module):
         if pretrained:
             try:
                 print(path)
-                self.load_state_dict(torch.load(path, map_location=cpu))
+                self.load_state_dict(torch.load(path, map_location=device))
             except UnpicklingError:
                 raise TypeError("Could not find the model, try running git lfs pull. If you haven't installed git lfs, "
                                 "you can here: https://git-lfs.github.com/")
