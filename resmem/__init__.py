@@ -25,7 +25,7 @@ class ResMem(nn.Module):
     def __init__(self, learning_rate=1e-5, momentum=.9, cruise_altitude=384, pretrained=False, device = device):
         super().__init__()
         if pretrained:
-            weights = ResNet152_Weights.to_device(device)
+            weights = ResNet152_Weights.DEFAULT
         else:
             weights = None
 
